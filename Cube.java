@@ -17,14 +17,28 @@ public class Cube{
     */
     
     void rotateUp(){
-        
+        pos[0] = 9; pos[1] = 10; pos[2] = 11;
+        pos[3] = 18; pos[4] = 19; pos[5] = 20;
+        pos[6] = 27; pos[7] = 28; pos[8] = 29;
+        pos[9] = 0; pos[10] = 1; pos[11] = 2;
+        pos[12] = 36; pos[13] = 37;
+        pos[14] = 38; pos[15] = 41;
+        pos[16] = 44; pos[17] = 43;
+        pos[18] = 42; pos[19] = 39;
         
         for(int i = 0;i < times;++i)
             rotate();
     }
     
     void rotateDown(){
-        
+        pos[0] = 35; pos[1] = 34; pos[2] = 33;
+        pos[3] = 26; pos[4] = 25; pos[5] = 24;
+        pos[6] = 17; pos[7] = 16; pos[8] = 15;
+        pos[9] = 8; pos[10] = 7; pos[11] = 6;
+        pos[12] = 45; pos[13] = 46;
+        pos[14] = 47; pos[15] = 50;
+        pos[16] = 53; pos[17] = 52;
+        pos[18] = 51; pos[19] = 48;
         
         for(int i = 0;i < times;++i)
             rotate();
@@ -75,8 +89,8 @@ public class Cube{
         for(int i = 0;i < 12;++i)
             M[ pos[i] ] = color[ (pos[i] + 9) % 12 ];
         
-        for(int i = 0;i < 9;++i)
-            M[ pos[12 + i] ] = color[ pos[12 + (i + 2) % 9] ];
+        for(int i = 0;i < 8;++i)
+            M[ pos[12 + i] ] = color[ pos[12 + (i + 2) % 8] ];
     }
     
     void rotateFront(int times){
@@ -130,6 +144,34 @@ public class Cube{
         pos[14] = 20; pos[15] = 23;
         pos[16] = 26; pos[17] = 25;
         pos[18] = 24; pos[19] = 21;
+        
+        for(int i = 0;i < times;++i)
+            rotate();
+    }
+    
+    void rotateUp(){
+        pos[0] = 9; pos[1] = 10; pos[2] = 11;
+        pos[3] = 18; pos[4] = 19; pos[5] = 20;
+        pos[6] = 27; pos[7] = 28; pos[8] = 29;
+        pos[9] = 0; pos[10] = 1; pos[11] = 2;
+        pos[12] = 36; pos[13] = 37;
+        pos[14] = 38; pos[15] = 41;
+        pos[16] = 44; pos[17] = 43;
+        pos[18] = 42; pos[19] = 39;
+        
+        for(int i = 0;i < times;++i)
+            rotate();
+    }
+    
+    void rotateDown(){
+        pos[0] = 35; pos[1] = 34; pos[2] = 33;
+        pos[3] = 26; pos[4] = 25; pos[5] = 24;
+        pos[6] = 17; pos[7] = 16; pos[8] = 15;
+        pos[9] = 8; pos[10] = 7; pos[11] = 6;
+        pos[12] = 45; pos[13] = 46;
+        pos[14] = 47; pos[15] = 50;
+        pos[16] = 53; pos[17] = 52;
+        pos[18] = 51; pos[19] = 48;
         
         for(int i = 0;i < times;++i)
             rotate();

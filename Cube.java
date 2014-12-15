@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Cube{
     /*
           Up
@@ -16,34 +18,6 @@ public class Cube{
           51 52 53
     */
     
-    void rotateUp(){
-        pos[0] = 9; pos[1] = 10; pos[2] = 11;
-        pos[3] = 18; pos[4] = 19; pos[5] = 20;
-        pos[6] = 27; pos[7] = 28; pos[8] = 29;
-        pos[9] = 0; pos[10] = 1; pos[11] = 2;
-        pos[12] = 36; pos[13] = 37;
-        pos[14] = 38; pos[15] = 41;
-        pos[16] = 44; pos[17] = 43;
-        pos[18] = 42; pos[19] = 39;
-        
-        for(int i = 0;i < times;++i)
-            rotate();
-    }
-    
-    void rotateDown(){
-        pos[0] = 35; pos[1] = 34; pos[2] = 33;
-        pos[3] = 26; pos[4] = 25; pos[5] = 24;
-        pos[6] = 17; pos[7] = 16; pos[8] = 15;
-        pos[9] = 8; pos[10] = 7; pos[11] = 6;
-        pos[12] = 45; pos[13] = 46;
-        pos[14] = 47; pos[15] = 50;
-        pos[16] = 53; pos[17] = 52;
-        pos[18] = 51; pos[19] = 48;
-        
-        for(int i = 0;i < times;++i)
-            rotate();
-    }
-    
     // colors of the cube's faces
     private int M[];
     // auxiliary arrays for rotations
@@ -58,6 +32,34 @@ public class Cube{
             for(int j = 0;j < 3;++j)
                 for(int k = 0;k < 3;++k)
                     M[9 * i + 3 * j + k] = i;
+    }
+    
+    void readFace(int f, Scanner sc){
+        for(int i = 0;i < 3;++i)
+            for(int j = 0;j < 3;++j)
+                M[9 * f + 3 * i + j] = sc.nextInt();
+    }
+    
+    void read(){
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("Up Face:");
+        readFace(4,sc);
+        
+        System.out.println("Left Face:");
+        readFace(0,sc);
+        
+        System.out.println("Front Face:");
+        readFace(1,sc);
+        
+        System.out.println("Right Face:");
+        readFace(2,sc);
+        
+        System.out.println("Back Face:");
+        readFace(3,sc);
+        
+        System.out.println("Down Face:");
+        readFace(5,sc);
     }
     
     void print(){
@@ -149,7 +151,7 @@ public class Cube{
             rotate();
     }
     
-    void rotateUp(){
+    void rotateUp(int times){
         pos[0] = 9; pos[1] = 10; pos[2] = 11;
         pos[3] = 18; pos[4] = 19; pos[5] = 20;
         pos[6] = 27; pos[7] = 28; pos[8] = 29;
@@ -163,7 +165,7 @@ public class Cube{
             rotate();
     }
     
-    void rotateDown(){
+    void rotateDown(int times){
         pos[0] = 35; pos[1] = 34; pos[2] = 33;
         pos[3] = 26; pos[4] = 25; pos[5] = 24;
         pos[6] = 17; pos[7] = 16; pos[8] = 15;

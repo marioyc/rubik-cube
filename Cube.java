@@ -74,6 +74,8 @@ public class Cube{
         
         for(int i = 0;i < 3;++i)
             System.out.println("      " + M[45 + 3 * i] + " " + M[45 + 3 * i + 1] + " " + M[45 + 3 * i + 2]);
+        
+        System.out.println();
     }
     
     /*
@@ -89,10 +91,10 @@ public class Cube{
             color[i] = M[ pos[i] ];
         
         for(int i = 0;i < 12;++i)
-            M[ pos[i] ] = color[ (pos[i] + 9) % 12 ];
+            M[ pos[i] ] = color[ (i + 9) % 12 ];
         
         for(int i = 0;i < 8;++i)
-            M[ pos[12 + i] ] = color[ pos[12 + (i + 2) % 8] ];
+            M[ pos[12 + i] ] = color[ 12 + (i + 2) % 8 ];
     }
     
     void rotateFront(int times){
@@ -141,7 +143,7 @@ public class Cube{
         pos[0] = 47; pos[1] = 50; pos[2] = 53;
         pos[3] = 33; pos[4] = 30; pos[5] = 27;
         pos[6] = 38; pos[7] = 41; pos[8] = 44;
-        pos[7] = 11; pos[8] = 14; pos[9] = 17;
+        pos[9] = 11; pos[10] = 14; pos[11] = 17;
         pos[12] = 18; pos[13] = 19;
         pos[14] = 20; pos[15] = 23;
         pos[16] = 26; pos[17] = 25;
@@ -177,5 +179,35 @@ public class Cube{
         
         for(int i = 0;i < times;++i)
             rotate();
+    }
+    
+    void randomMove(){
+    	double r1 = Math.random() * 3,r2 = Math.random() * 6;
+    	int times = 0;
+    	
+    	if(r1 < 1) times = 1;
+    	else if(r1 < 2) times = 2;
+    	else times = 3;
+    	
+    	if(r2 < 1) rotateFront(times);
+    	else if(r2 < 2) rotateBack(times);
+    	else if(r2 < 3) rotateLeft(times);
+    	else if(r2 < 4) rotateRight(times);
+    	else if(r2 < 5) rotateUp(times);
+    	else rotateDown(times);
+    }
+    
+    void mixCube(int moves){
+    	for(int i = 0;i < moves;++i)
+    		randomMove();
+    }
+    
+    boolean check(){
+    	for(int i = 0;i < 6;++i)
+    		for(int j = 0;j < 9;++j)
+    			if(M[9 * i + j] != M[9 * i + 4])
+    				return false;
+    	
+    	return true;
     }
 };

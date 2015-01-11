@@ -126,7 +126,7 @@ public class IDA2 extends IDASolverInterface{
 	}
 	
 	int solveTwoPositions(int sx, int sy, int ex, int ey){
-		if(memo[sx][sy][ex][ey] == -1)
+		if(memo[sx][sy][ex][ey] != -1)
 			return memo[sx][sy][ex][ey];
 		
 		Queue<Node> Q = new LinkedList<Node>();

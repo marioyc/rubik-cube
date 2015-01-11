@@ -1,21 +1,36 @@
 public abstract class IDASolverInterface {
 	final int MAX_DEPTH = 30;
 	final int INF = 50;
+	int exploredNodes;
 	
-	public int solve(Cube C){
+	public IDASolverReturn solve(Cube C){
+		IDASolverReturn ret = new IDASolverReturn();
+		ret.moves = -1;
+		
 		int i = 0;
+		exploredNodes = 0;
+		
+		long startTime = System.nanoTime();
 		
 		while(i <= MAX_DEPTH){
 			//System.out.println("i = " + i);
-			if(search(0,i,C))
-				return i;
+			if(search(0,i,C)){
+				ret.moves = i;
+				break;
+			}
 			++i;
 		}
 		
-		return -1;
+		long endTime = System.nanoTime();
+		double duration = (endTime - startTime) / 1000000.0;
+		
+		ret.exploredNodes = exploredNodes;
+		ret.duration = duration;
+		return ret;
 	}
 	
 	boolean search(int count, int maxMoves, Cube C){
+		++exploredNodes;
 		if(count + estimate(C) > maxMoves) return false;
 		if(count == maxMoves) return C.check();
 		

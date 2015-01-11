@@ -1,75 +1,58 @@
 public class Main{
-	static boolean search(int count, int maxMoves, Cube C){
-		if(count == maxMoves) return C.check();
+	// Question 4, <= 5 moves OK
+	
+	// BGOOGYBRRYYWRRWWBGBBRBBWRWGWWYOOGOYYRGGRWOGGOBYYBYROOW 5
+	// OBYYGGYGOBROYROBOOBBWBBWWBWROGRORRORYWBRWYRGYWGGWYWGYG 6
+	// GRRYGYWOOGGYOROWBBOOYWBWRRBBRYBOGWRGOGRYWBYWBGYWGYWRBO 6
+	// RRGGGBRRBOBGRROOOGRBBGBBRGGOOBOOROGBYWWYWWYYWYYYWYWWYW 7
+	// YWYYGGYBBGBWWRWWOBGGWBBYOOWOGGROBBOBRYGRWRORROGYOYYRWR 7
+	// OYBRGRRGRYRWBRYBRYROOGBBGBYGGBWOWOYWWWWOWWOYBYGROYOGBG 7
+	// GGWGGYYYOBRGORGYOWOBYOBYBRWBOWBOWGWRRWRRWROWYBBRGYYGBO 7
+	static int testIDA(IDASolverInterface solver, int moves){
+		Cube C = new Cube();
+		C.mixCube(moves);
+		System.out.println(C);
 		
-		for(int i = 1;i <= 3;++i){
-			C.rotateFront(1);
-			
-			if(search(count + 1,maxMoves,C))
-				return true;
-		}
-		C.rotateFront(1);
-
-		for(int i = 1;i <= 3;++i){
-			C.rotateBack(1);
-			
-			if(search(count + 1,maxMoves,C))
-				return true;
-		}
-		C.rotateBack(1);
-		
-		for(int i = 1;i <= 3;++i){
-			C.rotateLeft(1);
-			
-			if(search(count + 1,maxMoves,C))
-				return true;
-		}
-		C.rotateLeft(1);
-		
-		for(int i = 1;i <= 3;++i){
-			C.rotateRight(1);
-			
-			if(search(count + 1,maxMoves,C))
-				return true;
-		}
-		C.rotateRight(1);
-		
-		for(int i = 1;i <= 3;++i){
-			C.rotateUp(1);
-			
-			if(search(count + 1,maxMoves,C))
-				return true;
-		}
-		C.rotateUp(1);
-		
-		for(int i = 1;i <= 3;++i){
-			C.rotateDown(1);
-			
-			if(search(count + 1,maxMoves,C))
-				return true;
-		}
-		C.rotateDown(1);
-		
-		return false;
+		int ret = solver.solve(C);
+		return ret;
 	}
 	
-	// Question 4, <= 5 moves OK
-	static int IDA1(int moves){
-		Cube c = new Cube();
-		c.mixCube(moves);
+	
+	static void compareIDA(IDASolverInterface solver1, IDASolverInterface solver2, int moves){
+		Cube C = new Cube();
+		C.mixCube(moves);
 		
-		int i = 0;
+		Cube C2 = new Cube();
 		
-		while(i <= moves){
-			if(search(0,i,c))
-				return i;
-			++i;
+		try{
+			C2.initFromString(C.toString());
+		}catch(Exception e){
+			System.out.println(":(");
 		}
 		
-		return -1;
+		long startTime = System.nanoTime();
+		int ret1 = solver1.solve(C);
+		long endTime = System.nanoTime();
+		double duration = (endTime - startTime) / 1000000.0;
+		System.out.println("IDA1 : " + ret1);
+		System.out.println("duration1 = " + duration + " milliseconds");
+		
+		startTime = System.nanoTime();
+		int ret2 = solver2.solve(C2);
+		endTime = System.nanoTime();
+		duration = (endTime - startTime) / 1000000.0;
+		System.out.println("IDA2 : " + ret2);
+		System.out.println("duration2 = " + duration + " milliseconds");
 	}
 	
     public static void main(String args[]){
+    	IDA1 solver1 = new IDA1();
+    	IDA2 solver2 = new IDA2();
+    	
+    	for(int i = 0;i < 15;++i)
+	    	compareIDA(solver1,solver2,7);
+    	
+    	/*
 		double total[] = new double[10];
 		int cont[] = new int[10];
 		
@@ -79,7 +62,7 @@ public class Main{
 	    	for(int it = 0;it < 30;++it){
 	    		long startTime = System.nanoTime();
 	    		
-	    		int ret = IDA1(i);
+	    		int ret = testIDA(solver1,i);
 	    		
 	    		System.out.println("it = " + it + " : " + ret);
 	    		
@@ -95,6 +78,7 @@ public class Main{
     	
     	for(int i = 0;i <= 8;++i)
     		System.out.println("\ni = " + i + ", average duration = " + total[i] / cont[i] + " milliseconds\n");
+    	*/
     }
     
     /*

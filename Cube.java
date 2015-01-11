@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Cube{
     /*
@@ -19,61 +21,233 @@ public class Cube{
     */
     
     // colors of the cube's faces
-    private int M[];
+    public int M[];
+    // original positions
+    public int origin[];
     // auxiliary arrays for rotations
-    private int pos[],color[];
+    private int pos[],tmp1[],tmp2[];
+    // encoding and decoding original input
+    Map<Character, Integer> encode;
+    Map<Integer, Character> decode;
+    
+    final static int edgePairs[][] = {
+    		{1,39}, {3,32}, {5,12}, {7,48}, {10,43}, {14,21},
+    		{16,46}, {19,41}, {23,30}, {25,50}, {28,37}, {34,52}
+    };
+    
+    final static int cornerTriples[][] = {
+    		{0,29,36}, {2,9,42}, {6,35,51}, {8,15,45},
+    		{11,18,44}, {17,24,47}, {20,27,38}, {26,33,53}
+    };
     
     Cube(){
         M = new int[54];
+        origin = new int[54];
+        
         pos = new int[20];
-        color = new int[20];
+        tmp1 = new int[20];
+        tmp2 = new int[20];
+        
+        encode = new HashMap<Character, Integer>();
+        decode = new HashMap<Integer, Character>();
+        
+        encode.put('G', 0); decode.put(0, 'G');
+        encode.put('R', 1); decode.put(1, 'R');
+        encode.put('B', 2); decode.put(2, 'B');
+        encode.put('O', 3); decode.put(3, 'O');
+        encode.put('W', 4); decode.put(4, 'W');
+        encode.put('Y', 5); decode.put(5, 'Y');
         
         for(int i = 0;i < 6;++i)
             for(int j = 0;j < 3;++j)
-                for(int k = 0;k < 3;++k)
+                for(int k = 0;k < 3;++k){
                     M[9 * i + 3 * j + k] = i;
+                    origin[9 * i + 3 * j + k] = 9 * i + 3 * j + k;
+                }
     }
     
-    void readFace(int f, Scanner sc){
-        for(int i = 0;i < 3;++i)
-            for(int j = 0;j < 3;++j)
-                M[9 * f + 3 * i + j] = sc.nextInt();
-    }
-    
-    void read(){
+    void read() throws Exception{
         Scanner sc = new Scanner(System.in);
         
         System.out.println("Up Face:");
-        readFace(4,sc);
+        String uface = new String();
+        
+        for(int i = 0;i < 3;++i){
+        	String line = sc.nextLine();
+        	uface = uface + line;
+        }
         
         System.out.println("Left Face:");
-        readFace(0,sc);
+        String lface = new String();
+        
+        for(int i = 0;i < 3;++i){
+        	String line = sc.nextLine();
+        	lface = lface + line;
+        }
         
         System.out.println("Front Face:");
-        readFace(1,sc);
+        String fface = new String();
+        
+        for(int i = 0;i < 3;++i){
+        	String line = sc.nextLine();
+        	fface = fface + line;
+        }
         
         System.out.println("Right Face:");
-        readFace(2,sc);
+        String rface = new String();
+        
+        for(int i = 0;i < 3;++i){
+        	String line = sc.nextLine();
+        	rface = rface + line;
+        }
         
         System.out.println("Back Face:");
-        readFace(3,sc);
+        String bface = new String();
+        
+        for(int i = 0;i < 3;++i){
+        	String line = sc.nextLine();
+        	bface = bface + line;
+        }
         
         System.out.println("Down Face:");
-        readFace(5,sc);
+        String dface = new String();
+        
+        for(int i = 0;i < 3;++i){
+        	String line = sc.nextLine();
+        	dface = dface + line;
+        }
+        
+        sc.close();
+        
+        String cube = lface + fface + rface + bface + uface + dface;
+        initFromString(cube);
+    }
+    
+    void initFromString(String cube) throws Exception{
+        encode.clear();
+        decode.clear();
+
+        for(int i = 0;i < 6;++i){
+        	if(encode.containsKey(cube.charAt(9 * i + 4)))
+        		throw new Exception("Invalid cube: Repeated cube center");
+        	else
+    			encode.put(cube.charAt(9 * i + 4), i);
+        	
+        	decode.put(i, cube.charAt(9 * i + 4));
+        }
+        
+        for(int i = 0;i < 54;++i){
+        	if(encode.get(cube.charAt(i)) == null)
+        		throw new Exception("Invalid cube: has no center");
+        	else
+        		M[i] = encode.get(cube.charAt(i));
+        }
+        
+        for(int i = 0;i < 6;++i)
+    		origin[9 * i + 4] = 9 * i + 4;
+        
+        for(int i = 0;i < 12;++i){
+        	int x = edgePairs[i][0],y = edgePairs[i][1];
+        	int c1 = M[x],c2 = M[y];
+        	boolean found = false;
+        	
+        	for(int j = 0;j < 12;++j){
+        		int c3 = edgePairs[j][0] / 9,c4 = edgePairs[j][1] / 9;
+        		
+        		if(c1 == c3 && c2 == c4){
+        			origin[x] = edgePairs[j][0];
+        			origin[y] = edgePairs[j][1];
+        			found = true;
+        		}
+        		
+        		if(c1 == c4 && c2 == c3){
+        			origin[x] = edgePairs[j][1];
+        			origin[y] = edgePairs[j][0];
+        			found = true;
+        		}
+        	}
+        	
+        	if(!found)
+        		throw new Exception("Invalid cube: No valid origin position");
+        }
+        
+        for(int i = 0;i < 8;++i){
+        	int x = cornerTriples[i][0],y = cornerTriples[i][1],z = cornerTriples[i][2];
+        	int c1 = M[x],c2 = M[y],c3 = M[z];
+        	boolean found = false;
+        	
+        	for(int j = 0;j < 8;++j){
+        		int c4 = cornerTriples[j][0] / 9,c5 = cornerTriples[j][1] / 9,c6 = cornerTriples[j][2] / 9;
+        		
+        		if(c1 == c4 && c2 == c5 && c3 == c6){
+        			origin[x] = cornerTriples[j][0];
+        			origin[y] = cornerTriples[j][1];
+        			origin[z] = cornerTriples[j][2];
+        			found = true;
+        		}
+        		
+        		if(c1 == c4 && c2 == c6 && c3 == c5){
+        			origin[x] = cornerTriples[j][0];
+        			origin[y] = cornerTriples[j][2];
+        			origin[z] = cornerTriples[j][1];
+        			found = true;
+        		}
+        		
+        		if(c1 == c5 && c2 == c4 && c3 == c6){
+        			origin[x] = cornerTriples[j][1];
+        			origin[y] = cornerTriples[j][0];
+        			origin[z] = cornerTriples[j][2];
+        			found = true;
+        		}
+        		
+        		if(c1 == c5 && c2 == c6 && c3 == c4){
+        			origin[x] = cornerTriples[j][1];
+        			origin[y] = cornerTriples[j][2];
+        			origin[z] = cornerTriples[j][0];
+        			found = true;
+        		}
+        		
+        		if(c1 == c6 && c2 == c4 && c3 == c5){
+        			origin[x] = cornerTriples[j][2];
+        			origin[y] = cornerTriples[j][0];
+        			origin[z] = cornerTriples[j][1];
+        			found = true;
+        		}
+        		
+        		if(c1 == c6 && c2 == c5 && c3 == c4){
+        			origin[x] = cornerTriples[j][2];
+        			origin[y] = cornerTriples[j][1];
+        			origin[z] = cornerTriples[j][0];
+        			found = true;
+        		}
+        	}
+        	
+        	if(!found)
+        		throw new Exception("Invalid cube: No valid origin position");
+        }
+    }
+    
+    public String toString(){
+    	String ret = new String();
+    	
+    	for(int i = 0;i < 54;++i)
+    		ret = ret + decode.get(M[i]);
+    	
+    	return ret;
     }
     
     void print(){
         for(int i = 0;i < 3;++i)
-            System.out.println("      " + M[36 + 3 * i] + " " + M[36 + 3 * i + 1] + " " + M[36 + 3 * i + 2]);
+            System.out.println("      " + decode.get(M[36 + 3 * i]) + " " + decode.get(M[36 + 3 * i + 1]) + " " + decode.get(M[36 + 3 * i + 2]));
         
         for(int i = 0;i < 3;++i){
             for(int j = 0;j < 4;++j)
-                System.out.print(M[9 * j + 3 * i] + " " + M[9 * j + 3 * i + 1] + " " + M[9 * j + 3 * i + 2] + " ");
+                System.out.print(decode.get(M[9 * j + 3 * i]) + " " + decode.get(M[9 * j + 3 * i + 1]) + " " + decode.get(M[9 * j + 3 * i + 2]) + " ");
             System.out.println();
         }
         
         for(int i = 0;i < 3;++i)
-            System.out.println("      " + M[45 + 3 * i] + " " + M[45 + 3 * i + 1] + " " + M[45 + 3 * i + 2]);
+            System.out.println("      " + decode.get(M[45 + 3 * i]) + " " + decode.get(M[45 + 3 * i + 1]) + " " + decode.get(M[45 + 3 * i + 2]));
         
         System.out.println();
     }
@@ -87,42 +261,20 @@ public class Cube{
     */
     
     void rotate(){
-        for(int i = 0;i < 20;++i)
-            color[i] = M[ pos[i] ];
+        for(int i = 0;i < 20;++i){
+            tmp1[i] = M[ pos[i] ];
+            tmp2[i] = origin[ pos[i] ];
+        }
         
-        for(int i = 0;i < 12;++i)
-            M[ pos[i] ] = color[ (i + 9) % 12 ];
+        for(int i = 0;i < 12;++i){
+            M[ pos[i] ] = tmp1[ (i + 9) % 12 ];
+            origin[ pos[i] ] = tmp2[ (i + 9) % 12 ];
+        }
         
-        for(int i = 0;i < 8;++i)
-            M[ pos[12 + i] ] = color[ 12 + (i + 2) % 8 ];
-    }
-    
-    void rotateFront(int times){
-        pos[0] = 45; pos[1] = 46; pos[2] = 47;
-        pos[3] = 24; pos[4] = 21; pos[5] = 18;
-        pos[6] = 44; pos[7] = 43; pos[8] = 42;
-        pos[9] = 2; pos[10] = 5; pos[11] = 8;
-        pos[12] = 9; pos[13] = 10;
-        pos[14] = 11; pos[15] = 14;
-        pos[16] = 17; pos[17] = 16;
-        pos[18] = 15; pos[19] = 12;
-        
-        for(int i = 0;i < times;++i)
-            rotate();
-    }
-    
-    void rotateBack(int times){
-        pos[0] = 53; pos[1] = 52; pos[2] = 51;
-        pos[3] = 6; pos[4] = 3; pos[5] = 0;
-        pos[6] = 36; pos[7] = 37; pos[8] = 38;
-        pos[9] = 20; pos[10] = 23; pos[11] = 26;
-        pos[12] = 27; pos[13] = 28;
-        pos[14] = 29; pos[15] = 32;
-        pos[16] = 35; pos[17] = 34;
-        pos[18] = 33; pos[19] = 30;
-        
-        for(int i = 0;i < times;++i)
-            rotate();
+        for(int i = 0;i < 8;++i){
+            M[ pos[12 + i] ] = tmp1[ 12 + (i + 2) % 8 ];
+            origin[ pos[12 + i] ] = tmp2[ 12 + (i + 2) % 8 ];
+        }
     }
     
     void rotateLeft(int times){
@@ -139,6 +291,20 @@ public class Cube{
             rotate();
     }
     
+    void rotateFront(int times){
+        pos[0] = 45; pos[1] = 46; pos[2] = 47;
+        pos[3] = 24; pos[4] = 21; pos[5] = 18;
+        pos[6] = 44; pos[7] = 43; pos[8] = 42;
+        pos[9] = 2; pos[10] = 5; pos[11] = 8;
+        pos[12] = 9; pos[13] = 10;
+        pos[14] = 11; pos[15] = 14;
+        pos[16] = 17; pos[17] = 16;
+        pos[18] = 15; pos[19] = 12;
+        
+        for(int i = 0;i < times;++i)
+            rotate();
+    }
+    
     void rotateRight(int times){
         pos[0] = 47; pos[1] = 50; pos[2] = 53;
         pos[3] = 33; pos[4] = 30; pos[5] = 27;
@@ -148,6 +314,20 @@ public class Cube{
         pos[14] = 20; pos[15] = 23;
         pos[16] = 26; pos[17] = 25;
         pos[18] = 24; pos[19] = 21;
+        
+        for(int i = 0;i < times;++i)
+            rotate();
+    }
+    
+    void rotateBack(int times){
+        pos[0] = 53; pos[1] = 52; pos[2] = 51;
+        pos[3] = 6; pos[4] = 3; pos[5] = 0;
+        pos[6] = 36; pos[7] = 37; pos[8] = 38;
+        pos[9] = 20; pos[10] = 23; pos[11] = 26;
+        pos[12] = 27; pos[13] = 28;
+        pos[14] = 29; pos[15] = 32;
+        pos[16] = 35; pos[17] = 34;
+        pos[18] = 33; pos[19] = 30;
         
         for(int i = 0;i < times;++i)
             rotate();

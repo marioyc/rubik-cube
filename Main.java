@@ -24,6 +24,24 @@ public class Main{
 		System.out.println("-------------------------------------------\n");
 		
 		if(ret1.moves != ret2.moves)
+			throw new Exception("Different answers : " + solver1.getAlgorithm() + " and " + solver2.getAlgorithm() + " for " + s + ", " + moves + " random moves.");
+	}
+	
+	static void compareIDA(IDASolverInterface solver1, IDASolverInterface solver2, String s) throws Exception{
+		Cube C = new Cube();
+		C.initFromString(s);
+		
+		Cube C2 = new Cube();
+		C2.initFromString(s);
+		
+		IDASolverReturn ret1 = solver1.solve(C);
+		System.out.println(solver1.getAlgorithm() + " : " + ret1);
+		
+		IDASolverReturn ret2 = solver2.solve(C2);
+		System.out.println(solver2.getAlgorithm() + " : " + ret2);
+		System.out.println("-------------------------------------------\n");
+		
+		if(ret1.moves != ret2.moves)
 			throw new Exception("Different answers : " + solver1.getAlgorithm() + " and " + solver2.getAlgorithm() + " for " + s);
 	}
 	
@@ -52,6 +70,9 @@ public class Main{
     	for(int i = 0;i < 100;++i)
 	    	compareIDA(solver2,solver3,3);
     	*/
+    	
+    	// uncomment and change to test for a particular cube
+    	//compareIDA(solver2,solver3,"YGBYGBYGBRRRRRRRRRGBWGBWGBWOOOOOOOOOGGGWWWYYYWWWYYYBBB");
     	
     	// measure average time
     	/*

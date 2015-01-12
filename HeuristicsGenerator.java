@@ -8,7 +8,7 @@ public class HeuristicsGenerator {
 
 	public void generate() throws Exception{
 		generateMoves();
-		//generateCornerPositions();
+		generateCornerPositions();
 		generateEdgePositions(0);
 		generateEdgePositions(1);
 	}

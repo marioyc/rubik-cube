@@ -23,6 +23,12 @@ public class Main{
 		System.out.println(solver2.getAlgorithm() + " : " + ret2);
 		System.out.println("-------------------------------------------\n");
 		
+		if(ret1.moves == -1 || ret1.moves > moves)
+			throw new Exception("Wrong answer : " + solver1.getAlgorithm() + "for " + s);
+		
+		if(ret2.moves == -1 || ret2.moves > moves)
+			throw new Exception("Wrong answer : " + solver2.getAlgorithm() + "for " + s);
+		
 		if(ret1.moves != ret2.moves)
 			throw new Exception("Different answers : " + solver1.getAlgorithm() + " and " + solver2.getAlgorithm() + " for " + s + ", " + moves + " random moves.");
 	}
@@ -67,8 +73,9 @@ public class Main{
     	
     	// uncommment and change to compare two solvers
     	/*
-    	for(int i = 0;i < 100;++i)
-	    	compareIDA(solver2,solver3,3);
+    	for(int moves = 1;moves <= 6;++moves)
+	    	for(int i = 0;i < 200;++i)
+		    	compareIDA(solver2,solver3,moves);
     	*/
     	
     	// uncomment and change to test for a particular cube

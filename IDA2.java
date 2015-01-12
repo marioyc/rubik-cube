@@ -7,6 +7,10 @@ public class IDA2 extends IDASolverInterface{
 	int memo[][][][];
 	int pos_dest[][][],pos[];
 	
+	public String getAlgorithm(){
+		return "IDA2";
+	}
+	
 	IDA2(){
 		memo = new int[54][54][54][54];
 		

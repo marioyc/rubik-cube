@@ -175,7 +175,7 @@ public class HeuristicsGenerator {
 			for(int j = 0;j < 2;++j)
 				aux.pos[i][j] = Cube.edgePairs[6 * group + i][j];
 		
-		coded = aux.encode(group);
+		coded = aux.encode();
 		seen[coded] = 0;
 		Q[tail] = coded;
 		++tail;
@@ -192,7 +192,7 @@ public class HeuristicsGenerator {
 						for(int k = 0;k < 2;++k)
 							aux.pos[e][k] = pos_dest[ cur.pos[e][k] ][i][j];
 					
-					coded = aux.encode(group);
+					coded = aux.encode();
 					
 					if(coded != 0 && seen[coded] == -1){
 						seen[coded] = cur_dist;

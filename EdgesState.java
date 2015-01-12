@@ -16,7 +16,7 @@ public class EdgesState {
 		return ret;
 	}
 	
-	public int encode(int group){
+	public int encode(){
 		int aux1[] = new int[6];
 		int aux2 = 0;
 		

@@ -12,9 +12,9 @@ public class IDA3 extends IDASolverInterface{
 	}
 	
 	IDA3(){
-		dist = new int[88179840];
-		
 		BufferedReader br = null;
+		
+		dist = new int[88179840];
 		
 		System.out.println("Read corners database");
 		
@@ -53,7 +53,6 @@ public class IDA3 extends IDASolverInterface{
 		for(int i = 0;i < 42577920;++i){
 			try {
 				String line = br.readLine();
-				if(line == null) break;
 				StringTokenizer st = new StringTokenizer(line);
 				
 				int id = Integer.parseInt(st.nextToken());
@@ -81,7 +80,6 @@ public class IDA3 extends IDASolverInterface{
 		for(int i = 0;i < 42577920;++i){
 			try {
 				String line = br.readLine();
-				if(line == null) break;
 				StringTokenizer st = new StringTokenizer(line);
 				
 				int id = Integer.parseInt(st.nextToken());

@@ -50,7 +50,7 @@ public class IDA3 extends IDASolverInterface{
 		for(int i = 0;i < 42577920;++i)
 			edges_0_dist[i] = -1;
 		
-		for(int i = 0;i < 42577919;++i){
+		for(int i = 0;i < 42577920;++i){
 			try {
 				String line = br.readLine();
 				StringTokenizer st = new StringTokenizer(line);
@@ -77,7 +77,7 @@ public class IDA3 extends IDASolverInterface{
 		for(int i = 0;i < 42577920;++i)
 			edges_1_dist[i] = -1;
 		
-		for(int i = 0;i < 42577920;++i){
+		for(int i = 0;i < 42577919;++i){
 			try {
 				String line = br.readLine();
 				StringTokenizer st = new StringTokenizer(line);

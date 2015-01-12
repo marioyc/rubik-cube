@@ -5,14 +5,6 @@ class CornersState{
 		pos = new int[7][3];
 	}
 	
-	CornersState(CornersState o){
-		pos = new int[7][3];
-		
-		for(int i = 0;i < 7;++i)
-			for(int j = 0;j < 3;++j)
-					pos[i][j] = o.pos[i][j];
-	}
-	
 	public String toString(){
 		String s = new String();
 		

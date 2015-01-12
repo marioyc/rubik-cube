@@ -21,7 +21,7 @@ public class EdgesState {
 		int aux2 = 0;
 		
 		for(int i = 0;i < 6;++i){
-			int x = pos[i][0],y = pos[i][0];
+			int x = pos[i][0],y = pos[i][1];
 			
 			for(int j = 0;j < 12;++j){
 				int a = Cube.edgePairs[j][0];

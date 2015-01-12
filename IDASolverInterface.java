@@ -1,9 +1,11 @@
 public abstract class IDASolverInterface {
-	final int MAX_DEPTH = 30;
+	final int MAX_DEPTH = 20;
 	final int INF = 50;
 	int exploredNodes;
 	
-	public IDASolverReturn solve(Cube C){
+	public abstract String getAlgorithm();
+	
+	public IDASolverReturn solve(Cube C)  throws Exception{
 		IDASolverReturn ret = new IDASolverReturn();
 		ret.moves = -1;
 		
@@ -29,7 +31,7 @@ public abstract class IDASolverInterface {
 		return ret;
 	}
 	
-	boolean search(int count, int maxMoves, Cube C){
+	boolean search(int count, int maxMoves, Cube C) throws Exception{
 		++exploredNodes;
 		if(count + estimate(C) > maxMoves) return false;
 		if(count == maxMoves) return C.check();
@@ -85,5 +87,5 @@ public abstract class IDASolverInterface {
 		return false;
 	}
 	
-	abstract int estimate(Cube C);
+	abstract int estimate(Cube C) throws Exception;
 }

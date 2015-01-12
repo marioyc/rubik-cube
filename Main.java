@@ -11,9 +11,10 @@ public class Main{
 		Cube C = new Cube();
 		C.mixCube(moves);
 		
-		Cube C2 = new Cube();
+		String s = C.toString();
 		
-		C2.initFromString(C.toString());
+		Cube C2 = new Cube();
+		C2.initFromString(s);
 		
 		IDASolverReturn ret1 = solver1.solve(C);
 		System.out.println(solver1.getAlgorithm() + " : " + ret1);
@@ -23,7 +24,7 @@ public class Main{
 		System.out.println("-------------------------------------------\n");
 		
 		if(ret1.moves != ret2.moves)
-			throw new Exception("Different answers : " + solver1.getAlgorithm() + " and " + solver2.getAlgorithm() + " for " + C);
+			throw new Exception("Different answers : " + solver1.getAlgorithm() + " and " + solver2.getAlgorithm() + " for " + s);
 	}
 	
     public static void main(String args[]) throws Exception{

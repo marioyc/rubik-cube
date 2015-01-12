@@ -1,3 +1,8 @@
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
 public class HeuristicsGenerator {
 	static int pos_dest[][][],pos[];
 
@@ -144,5 +149,14 @@ public class HeuristicsGenerator {
 				}
 			}
 		}
+		
+		Writer w = null;
+		
+		w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("precalc/corners_out.txt"), "utf-8"));
+		
+		for(int i = 0;i < 88179840;++i)
+			w.write(i + " " + seen[i] + "\n");
+		
+		w.close();
 	}
 }

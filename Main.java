@@ -1,14 +1,5 @@
 public class Main{
-	// Question 4, <= 5 moves OK
-	
-	// BGOOGYBRRYYWRRWWBGBBRBBWRWGWWYOOGOYYRGGRWOGGOBYYBYROOW 5
-	// OBYYGGYGOBROYROBOOBBWBBWWBWROGRORRORYWBRWYRGYWGGWYWGYG 6
-	// GRRYGYWOOGGYOROWBBOOYWBWRRBBRYBOGWRGOGRYWBYWBGYWGYWRBO 6
-	// RRGGGBRRBOBGRROOOGRBBGBBRGGOOBOOROGBYWWYWWYYWYYYWYWWYW 7
-	// YWYYGGYBBGBWWRWWOBGGWBBYOOWOGGROBBOBRYGRWRORROGYOYYRWR 7
-	// OYBRGRRGRYRWBRYBRYROOGBBGBYGGBWOWOYWWWWOWWOYBYGROYOGBG 7
-	// GGWGGYYYOBRGORGYOWOBYOBYBRWBOWBOWGWRRWRRWROWYBBRGYYGBO 7
-	static IDASolverReturn testIDA(IDASolverInterface solver, int moves){
+	static IDASolverReturn testIDA(IDASolverInterface solver, int moves)  throws Exception{
 		Cube C = new Cube();
 		C.mixCube(moves);
 		System.out.println(C);
@@ -16,39 +7,52 @@ public class Main{
 		return solver.solve(C);
 	}
 	
-	
-	static void compareIDA(IDASolverInterface solver1, IDASolverInterface solver2, int moves){
+	static void compareIDA(IDASolverInterface solver1, IDASolverInterface solver2, int moves)  throws Exception{
 		Cube C = new Cube();
 		C.mixCube(moves);
 		
 		Cube C2 = new Cube();
 		
-		try{
-			C2.initFromString(C.toString());
-		}catch(Exception e){
-			System.out.println(":(");
-		}
+		C2.initFromString(C.toString());
 		
 		IDASolverReturn ret1 = solver1.solve(C);
-		System.out.println("IDA1 : " + ret1);
+		System.out.println(solver1.getAlgorithm() + " : " + ret1);
 		
 		IDASolverReturn ret2 = solver2.solve(C2);
-		System.out.println("IDA2 : " + ret2);
+		System.out.println(solver2.getAlgorithm() + " : " + ret2);
 		System.out.println("-------------------------------------------\n");
+		
+		if(ret1.moves != ret2.moves)
+			throw new Exception("Different answers : " + solver1.getAlgorithm() + " and " + solver2.getAlgorithm() + " for " + C);
 	}
 	
-    public static void main(String args[]){
+    public static void main(String args[]) throws Exception{
+    	// uncomment to generate pattern databases
+    	/*HeuristicsGenerator G = new HeuristicsGenerator();
+    	
+    	try {
+			G.generate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+    	
     	IDA1 solver1 = new IDA1();
     	IDA2 solver2 = new IDA2();
+    	IDA3 solver3 = new IDA3();
     	
-    	for(int i = 0;i < 15;++i){
-    		IDASolverReturn ret = testIDA(solver2,9);
+    	// uncomment and change to test a solver
+    	/*for(int i = 0;i < 100;++i){
+    		IDASolverReturn ret = testIDA(solver3,9);
     		System.out.println(ret);
-    	}
+    	}*/
     	
-    	//for(int i = 0;i < 15;++i)
-	    //	compareIDA(solver1,solver2,7);
+    	// uncommment and change to compare two solvers
+    	/*
+    	for(int i = 0;i < 100;++i)
+	    	compareIDA(solver2,solver3,3);
+    	*/
     	
+    	// measure average time
     	/*
 		double total[] = new double[10];
 		int cont[] = new int[10];
@@ -77,20 +81,4 @@ public class Main{
     		System.out.println("\ni = " + i + ", average duration = " + total[i] / cont[i] + " milliseconds\n");
     	*/
     }
-    
-    /*
-		i = 1, average duration = 1.175077159090909 milliseconds
-		
-		i = 2, average duration = 2.9136991250000013 milliseconds
-		
-		i = 3, average duration = 12.997581391304347 milliseconds
-		
-		i = 4, average duration = 37.02824552777778 milliseconds
-		
-		i = 5, average duration = 652.3021389000002 milliseconds
-		
-		i = 6, average duration = 7947.991147769231 milliseconds
-		
-		i = 7, average duration = 167997.96886766667 milliseconds
-      */
 }

@@ -2,6 +2,7 @@ public abstract class IDASolverInterface {
 	final int MAX_DEPTH = 20;
 	final int INF = 50;
 	int exploredNodes;
+	String solution;
 	
 	public abstract String getAlgorithm();
 	
@@ -11,6 +12,7 @@ public abstract class IDASolverInterface {
 		
 		int i = 0;
 		exploredNodes = 0;
+		solution = new String();
 		
 		long startTime = System.nanoTime();
 		
@@ -28,6 +30,7 @@ public abstract class IDASolverInterface {
 		
 		ret.exploredNodes = exploredNodes;
 		ret.duration = duration;
+		ret.solution = solution;
 		return ret;
 	}
 	
@@ -38,49 +41,67 @@ public abstract class IDASolverInterface {
 		
 		for(int i = 1;i <= 3;++i){
 			C.rotateFront(1);
+			solution = solution + i + "F  ";
 			
 			if(search(count + 1,maxMoves,C))
 				return true;
+			
+			solution = solution.substring(0, solution.length() - 4);
 		}
 		C.rotateFront(1);
 
 		for(int i = 1;i <= 3;++i){
 			C.rotateBack(1);
+			solution = solution + i + "B  ";
 			
 			if(search(count + 1,maxMoves,C))
 				return true;
+			
+			solution = solution.substring(0, solution.length() - 4);
 		}
 		C.rotateBack(1);
 		
 		for(int i = 1;i <= 3;++i){
 			C.rotateLeft(1);
+			solution = solution + i + "L  ";
 			
 			if(search(count + 1,maxMoves,C))
 				return true;
+			
+			solution = solution.substring(0, solution.length() - 4);
 		}
 		C.rotateLeft(1);
 		
 		for(int i = 1;i <= 3;++i){
 			C.rotateRight(1);
+			solution = solution + i + "R  ";
 			
 			if(search(count + 1,maxMoves,C))
 				return true;
+			
+			solution = solution.substring(0, solution.length() - 4);
 		}
 		C.rotateRight(1);
 		
 		for(int i = 1;i <= 3;++i){
 			C.rotateUp(1);
+			solution = solution + i + "U  ";
 			
 			if(search(count + 1,maxMoves,C))
 				return true;
+			
+			solution = solution.substring(0, solution.length() - 4);
 		}
 		C.rotateUp(1);
 		
 		for(int i = 1;i <= 3;++i){
 			C.rotateDown(1);
+			solution = solution + i + "D  ";
 			
 			if(search(count + 1,maxMoves,C))
 				return true;
+			
+			solution = solution.substring(0, solution.length() - 4);
 		}
 		C.rotateDown(1);
 		

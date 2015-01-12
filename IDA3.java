@@ -16,6 +16,8 @@ public class IDA3 extends IDASolverInterface{
 		
 		BufferedReader br = null;
 		
+		System.out.println("Read corners database");
+		
 		try {
 			br = new BufferedReader(new FileReader("precalc/corners_in.txt"));
 		} catch (FileNotFoundException e) {
@@ -35,6 +37,8 @@ public class IDA3 extends IDASolverInterface{
 			}
 		}
 		
+		System.out.println("Read edges database 0");
+		
 		try {
 			br = new BufferedReader(new FileReader("precalc/edges_0_in.txt"));
 		} catch (FileNotFoundException e) {
@@ -42,6 +46,9 @@ public class IDA3 extends IDASolverInterface{
 		}
 		
 		edges_0_dist = new int[42577920];
+		
+		for(int i = 0;i < 42577920;++i)
+			edges_0_dist[i] = -1;
 		
 		for(int i = 0;i < 42577920;++i){
 			try {
@@ -58,6 +65,8 @@ public class IDA3 extends IDASolverInterface{
 			}
 		}
 		
+		System.out.println("Read edges database 1");
+		
 		try {
 			br = new BufferedReader(new FileReader("precalc/edges_1_in.txt"));
 		} catch (FileNotFoundException e) {
@@ -65,6 +74,9 @@ public class IDA3 extends IDASolverInterface{
 		}
 		
 		edges_1_dist = new int[42577920];
+		
+		for(int i = 0;i < 42577920;++i)
+			edges_1_dist[i] = -1;
 		
 		for(int i = 0;i < 42577920;++i){
 			try {

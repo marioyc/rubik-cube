@@ -1,13 +1,3 @@
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.util.LinkedList;
-import java.util.Queue;
-
 public class HeuristicsGenerator {
 	static int pos_dest[][][],pos[];
 
@@ -111,76 +101,48 @@ public class HeuristicsGenerator {
 	}
 	
 	private void generateCornerPositions() throws Exception{
-		System.out.println("Start precalculateCornerPositions");
-		Writer w = null;
+		int Q[] = new int[88179840];
+		int head = 0,tail = 0;
+		int seen[] = new int[88179840];
 		
-		try{
-			w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("precalc/corners.txt"), "utf-8"));
-		}catch(UnsupportedEncodingException e){
-			e.printStackTrace();
-		}catch(FileNotFoundException e){
-			e.printStackTrace();
-		}
-		
-		Queue<CornersState> Q = new LinkedList<CornersState>();
-		Queue<Integer> Qdist = new LinkedList<Integer>();
-		boolean seen[] = new boolean[88179840];
-		
-		CornersState aux = new CornersState();
+		CornersState aux = new CornersState(),cur;
+		int coded;
 		
 		for(int i = 0;i < 7;++i)
 			for(int j = 0;j < 3;++j)
 				aux.pos[i][j] = Cube.cornerTriples[i][j];
 		
-		Q.add(aux);
-		Qdist.add(0);
-		seen[aux.encode()] = true;
+		coded = aux.encode();
+		seen[coded] = 0;
+		Q[tail] = coded;
+		++tail;
 		
-		int contNodes = 0;
+		System.out.println(coded + " " + 0);
 		
-		while(!Q.isEmpty()){
-			CornersState cur = Q.poll();
-			int cur_dist = Qdist.poll();
+		while(head < tail){
+			int cur_coded = Q[head];
+			cur = CornersState.decode(cur_coded);
+			int cur_dist = seen[cur_coded] + 1;
+			++head;
 			
-			try{
-				w.write(cur.encode() + " " + cur_dist + "\n");
-			}catch (IOException e){
-				e.printStackTrace();
-			}
-			
-			++contNodes;
 			
 			for(int i = 0;i < 6;++i){
 				for(int j = 0;j < 3;++j){
-					aux = new CornersState();
-					
 					for(int c = 0;c < 7;++c)
 						for(int k = 0;k < 3;++k)
 							aux.pos[c][k] = pos_dest[ cur.pos[c][k] ][i][j];
 					
-					int coded = aux.encode();
+					coded = aux.encode();
 					
-					/*if(CornersState.decode(coded).encode() != coded){
-						throw new Exception("Wrong encode / decode " + aux + " || " + CornersState.decode(coded));
-					}*/
-					
-					if(!seen[coded]){
-						//System.out.println(cur + " --> " + aux + " -- " + cur.equals(aux));
-						Q.add(aux);
-						Qdist.add(cur_dist + 1);
-						seen[coded] = true;
+					if(coded != 0 && seen[coded] == 0){
+						seen[coded] = cur_dist;
+						Q[tail] = coded;
+						++tail;
+
+						System.out.println(coded + " " + cur_dist);
 					}
 				}
 			}
-		}
-		
-		System.out.println("End precalculateCornerPositions");
-		System.out.println("contNodes = " + contNodes);
-		
-		try{
-			w.close();
-		}catch (IOException e){
-			e.printStackTrace();
 		}
 	}
 }

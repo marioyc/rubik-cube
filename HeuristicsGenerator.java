@@ -8,7 +8,9 @@ public class HeuristicsGenerator {
 
 	public void generate() throws Exception{
 		generateMoves();
-		generateCornerPositions();
+		//generateCornerPositions();
+		generateEdgePositions(0);
+		generateEdgePositions(1);
 	}
 	
 	private void generateMoves(){
@@ -150,12 +152,64 @@ public class HeuristicsGenerator {
 			}
 		}
 		
-		Writer w = null;
-		
-		w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("precalc/corners_out.txt"), "utf-8"));
+		Writer w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("precalc/corners_out.txt"), "utf-8"));
 		
 		for(int i = 0;i < 88179840;++i)
 			w.write(i + " " + seen[i] + "\n");
+		
+		w.close();
+	}
+	
+	private void generateEdgePositions(int group) throws Exception{
+		int Q[] = new int[42577920];
+		int head = 0,tail = 0;
+		int seen[] = new int[42577920];
+		
+		for(int i = 0;i < 42577920;++i)
+			seen[i] = -1;
+		
+		EdgesState aux = new EdgesState(),cur;
+		int coded;
+		
+		for(int i = 0;i < 6;++i)
+			for(int j = 0;j < 2;++j)
+				aux.pos[i][j] = Cube.edgePairs[6 * group + i][j];
+		
+		coded = aux.encode(group);
+		seen[coded] = 0;
+		Q[tail] = coded;
+		++tail;
+		
+		while(head < tail){
+			int cur_coded = Q[head];
+			cur = EdgesState.decode(cur_coded);
+			int cur_dist = seen[cur_coded] + 1;
+			++head;
+			
+			for(int i = 0;i < 6;++i){
+				for(int j = 0;j < 3;++j){
+					for(int e = 0;e < 6;++e)
+						for(int k = 0;k < 2;++k)
+							aux.pos[e][k] = pos_dest[ cur.pos[e][k] ][i][j];
+					
+					coded = aux.encode(group);
+					
+					if(coded != 0 && seen[coded] == -1){
+						seen[coded] = cur_dist;
+						Q[tail] = coded;
+						++tail;
+					}
+				}
+			}
+		}
+		
+		System.out.println("tail = " + tail);
+		
+		Writer w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("precalc/edges_" + group + "_out.txt"), "utf-8"));
+		
+		for(int i = 0;i < 42577920;++i)
+			if(seen[i] != -1)
+				w.write(i + " " + seen[i] + "\n");
 		
 		w.close();
 	}

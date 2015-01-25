@@ -77,7 +77,7 @@ public class IDA3 extends IDASolverInterface{
 		for(int i = 0;i < 42577920;++i)
 			edges_1_dist[i] = -1;
 		
-		for(int i = 0;i < 42577919;++i){
+		for(int i = 0;i < 42577920;++i){
 			try {
 				String line = br.readLine();
 				StringTokenizer st = new StringTokenizer(line);
@@ -125,8 +125,6 @@ public class IDA3 extends IDASolverInterface{
 			}
 		}
 		
-		if(edges_0_dist[aux2.encode()] == -1)
-			throw new Exception("edges_0_dist index not found for : " + C);
 		ret = Math.max(ret, edges_0_dist[aux2.encode()]);
 		
 		EdgesState aux3 = new EdgesState();
@@ -144,8 +142,6 @@ public class IDA3 extends IDASolverInterface{
 			}
 		}
 		
-		if(edges_1_dist[aux3.encode()] == -1)
-			throw new Exception("edges_1_dist index not found for : " + C);
 		ret = Math.max(ret, edges_1_dist[aux3.encode()]);
 		
 		return ret;

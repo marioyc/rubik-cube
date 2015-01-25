@@ -2,18 +2,19 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Arrays;
 
 public class HeuristicsGenerator {
-	static int pos_dest[][][],pos[];
+	private static int pos_dest[][][],pos[];
 
-	public void generate() throws Exception{
+	public static void generate() throws Exception{
 		generateMoves();
 		generateCornerPositions();
 		generateEdgePositions(0);
 		generateEdgePositions(1);
 	}
 	
-	private void generateMoves(){
+	private static void generateMoves(){
 		pos_dest = new int[54][6][3];
 		
 		for(int i = 0;i < 54;++i)
@@ -32,7 +33,7 @@ public class HeuristicsGenerator {
 		pos[16] = 8; pos[17] = 7;
 		pos[18] = 6; pos[19] = 3;
 		
-		generateFace(0);
+		generateFaceMoves(0);
 		
 		// Front
 		pos[0] = 45; pos[1] = 46; pos[2] = 47;
@@ -44,7 +45,7 @@ public class HeuristicsGenerator {
 		pos[16] = 17; pos[17] = 16;
 		pos[18] = 15; pos[19] = 12;
 		
-		generateFace(1);
+		generateFaceMoves(1);
 		
 		// Right
 		pos[0] = 47; pos[1] = 50; pos[2] = 53;
@@ -56,7 +57,7 @@ public class HeuristicsGenerator {
 		pos[16] = 26; pos[17] = 25;
 		pos[18] = 24; pos[19] = 21;
 		
-		generateFace(2);
+		generateFaceMoves(2);
 		
 		// Back
 		pos[0] = 53; pos[1] = 52; pos[2] = 51;
@@ -68,7 +69,7 @@ public class HeuristicsGenerator {
 		pos[16] = 35; pos[17] = 34;
 		pos[18] = 33; pos[19] = 30;
 		
-		generateFace(3);
+		generateFaceMoves(3);
 		
 		// Up
 		pos[0] = 9; pos[1] = 10; pos[2] = 11;
@@ -80,7 +81,7 @@ public class HeuristicsGenerator {
 		pos[16] = 44; pos[17] = 43;
 		pos[18] = 42; pos[19] = 39;
 		
-		generateFace(4);
+		generateFaceMoves(4);
 		
 		// Down
 		pos[0] = 35; pos[1] = 34; pos[2] = 33;
@@ -92,10 +93,10 @@ public class HeuristicsGenerator {
 		pos[16] = 53; pos[17] = 52;
 		pos[18] = 51; pos[19] = 48;
 		
-		generateFace(5);
+		generateFaceMoves(5);
 	}
 	
-	private void generateFace(int f){
+	private static void generateFaceMoves(int f){
 		for(int i = 0;i < 12;++i)
 			pos_dest[ pos[ (i + 9) % 12 ] ][f][0] = pos[i];
 		
@@ -107,10 +108,12 @@ public class HeuristicsGenerator {
 				pos_dest[i][f][j] = pos_dest[ pos_dest[i][f][0] ][f][j - 1];
 	}
 	
-	private void generateCornerPositions() throws Exception{
+	private static void generateCornerPositions() throws Exception{
 		int Q[] = new int[88179840];
 		int head = 0,tail = 0;
 		int seen[] = new int[88179840];
+		
+		Arrays.fill(seen, -1);
 		
 		CornersState aux = new CornersState(),cur;
 		int coded;
@@ -123,8 +126,6 @@ public class HeuristicsGenerator {
 		seen[coded] = 0;
 		Q[tail] = coded;
 		++tail;
-		
-		System.out.println(coded + " " + 0);
 		
 		while(head < tail){
 			int cur_coded = Q[head];
@@ -141,12 +142,10 @@ public class HeuristicsGenerator {
 					
 					coded = aux.encode();
 					
-					if(coded != 0 && seen[coded] == 0){
+					if(seen[coded] == -1){
 						seen[coded] = cur_dist;
 						Q[tail] = coded;
 						++tail;
-
-						System.out.println(coded + " " + cur_dist);
 					}
 				}
 			}
@@ -160,13 +159,12 @@ public class HeuristicsGenerator {
 		w.close();
 	}
 	
-	private void generateEdgePositions(int group) throws Exception{
+	private static void generateEdgePositions(int group) throws Exception{
 		int Q[] = new int[42577920];
 		int head = 0,tail = 0;
 		int seen[] = new int[42577920];
 		
-		for(int i = 0;i < 42577920;++i)
-			seen[i] = -1;
+		Arrays.fill(seen, -1);
 		
 		EdgesState aux = new EdgesState(),cur;
 		int coded;
@@ -194,7 +192,7 @@ public class HeuristicsGenerator {
 					
 					coded = aux.encode();
 					
-					if(coded != 0 && seen[coded] == -1){
+					if(seen[coded] == -1){
 						seen[coded] = cur_dist;
 						Q[tail] = coded;
 						++tail;
@@ -202,8 +200,6 @@ public class HeuristicsGenerator {
 				}
 			}
 		}
-		
-		System.out.println("tail = " + tail);
 		
 		Writer w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("precalc/edges_" + group + "_out.txt"), "utf-8"));
 		

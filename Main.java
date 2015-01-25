@@ -53,10 +53,9 @@ public class Main{
 	
     public static void main(String args[]) throws Exception{
     	// uncomment to generate pattern databases
-    	/*HeuristicsGenerator G = new HeuristicsGenerator();
     	
-    	try {
-			G.generate();
+    	/*try {
+    		HeuristicsGenerator.generate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}*/
@@ -66,14 +65,14 @@ public class Main{
     	IDA3 solver3 = new IDA3();
     	
     	// uncomment and change to test a solver
-    	/*for(int i = 0;i < 100;++i){
-    		IDASolverReturn ret = testIDA(solver3,9);
+    	/*for(int i = 0;i < 20;++i){
+    		IDASolverReturn ret = testIDA(solver3,13);
     		System.out.println(ret);
     	}*/
     	
     	// uncommment and change to compare two solvers
-    	/*
-    	for(int moves = 1;moves <= 6;++moves)
+    	
+    	/*for(int moves = 1;moves <= 6;++moves)
 	    	for(int i = 0;i < 200;++i)
 		    	compareIDA(solver2,solver3,moves);
     	*/

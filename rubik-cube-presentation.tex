@@ -1,0 +1,252 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{Warsaw}
+
+\title{Finding Optimal Solutions to Rubik's cube}
+\author{Mario Ynocente Castro}
+\institute{Ecole polytechnique}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Cube class}
+
+\begin{itemize}
+\item
+Representation of the cube as a 54 entries array.
+
+\item
+Functions:
+
+\begin{itemize}
+\item
+Input: read(), initFromString(s)
+\item
+Output: toString(), print()
+\item
+Rotations: rotateLeft(times), rotateFront(times), rotateRight(times), rotateBack(times), rotateUp(times), rotateDown(times), rotate()
+\item
+Generating cubes: mixCube(moves), randomMove()
+\item
+Verification: check()
+\end{itemize}
+
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{IDASolverReturn class}
+
+Used to return information about the solution
+
+\begin{itemize}
+\item
+Number of moves in the optimal solution
+\item
+Number of calls to the search() function
+\item
+Time it took
+\item
+Sequence of moves in the solution
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{IDASolverInterface class}
+
+Provides the common parts to the three algorithms that use IDA*:
+
+\begin{itemize}
+\item
+solve(Cube C): increasingly iterates over the possible depths until a solution is found
+\item
+search(int count, int maxMoves, Cube C):
+
+\begin{itemize}
+\item
+Checks if a solution was found or the maximum depth was reached
+\item
+Cuts the search if the estimated number of moves is greater than the maximum number of moves
+\item
+Otherwise, it tries all possible next moves and calls itself
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{IDASolverInterface class}
+
+Two functions will be implemented by each algorithm:
+
+\begin{itemize}
+\item
+getAlgorithm(): returns the algorithm's name
+\item
+estimate(Cube C): provides a lower bound for the remaining number of moves
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{IDA1 class (Question 4)}
+
+A simple lower bound is 0.
+\end{frame}
+
+\begin{frame}
+\frametitle{IDA2 class (Questions 6,7)}
+
+\begin{itemize}
+\item
+Calculates for each cube the minimum number of moves to place it at its correct position
+\item
+Each cube can be determined by the positions of two of its faces
+\item
+We do a BFS, and we case can save the results in a $54 \times 54 \times 54 \times 54$ matrix.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{IDA3 class (Questions 8,9)}
+
+\begin{itemize}
+\item
+Finding Optimal Solutions to Rubik's Cube Using Pattern Databases" by Richard E. Korf
+
+\item
+One pattern datases that calculates the minimum number of moves to place all the corner cubes
+
+\item
+Two pattern databases that calculate the minimum number of moves to place a group of six edge cubes
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{HeuristicsGenerator class}
+
+\begin{itemize}
+\item
+3 Breadth First Searches
+\item
+We keep the states encoded as integers inside a queue
+
+\begin{itemize}
+\item
+$88179840 = 8! \times 3^7$ corner states
+\item
+$42577920 = \frac{12!}{6!} \times 2^6$ edge states in each group
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{CornersState class}
+
+\begin{itemize}
+\item
+Keeps the positions of the three faces for 7 corners of the cube
+\item
+encode(): Turns the cube into a permutation of $0,1,\ldots,7$ and for each cube determine in which of its 3 possible orientations it is
+\item
+decode(): steps in the reverse order
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{EdgesState class}
+
+\begin{itemize}
+\item
+Keeps the positions of the two faces for the 6 edge cubes in a group
+\item
+encode(): Turns the cube into a permutation of 6 numbers from $0,1,\ldots,11$ and for each cube determine in which of its 2 possible orientations it is
+\item
+decode(): steps in the reverse order
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Some extra utilities}
+
+\begin{itemize}
+\item
+testIDA(solver, moves)
+\item
+compareIDA(solver1, solver2, moves)
+\item
+compareIDA(solver1, solver2, s)
+\item
+measureAverageTime(solver, maxMoves, numIt)
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Average Time (IDA1)}
+
+\begin{itemize}
+\item
+1 iteration(s), average time = 0.0187275553 milliseconds
+\item
+2 iteration(s), average time = 0.1304384461 milliseconds
+\item
+3 iteration(s), average time = 1.2987424571 milliseconds
+\item
+4 iteration(s), average time = 23.7366721729 milliseconds
+\item
+5 iteration(s), average time = 453.5737026717 milliseconds
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Average Time (IDA2)}
+
+\begin{itemize}
+\item
+1 iteration(s), average time = 0.1548157628 milliseconds
+\item
+2 iteration(s), average time = 0.2683026750 milliseconds
+\item
+3 iteration(s), average time = 0.3011364937 milliseconds
+\item
+4 iteration(s), average time = 2.20671841264 milliseconds
+\item
+5 iteration(s), average time = 28.1426577772 milliseconds
+\item
+6 iteration(s), average time = 413.3850355594 milliseconds
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Average Time (IDA3)}
+
+\begin{itemize}
+\item
+1 iteration(s), average time = 0.0588183479 milliseconds
+\item
+2 iteration(s), average time = 0.1293977463 milliseconds
+\item
+3 iteration(s), average time = 0.1742215336 milliseconds
+\item
+4 iteration(s), average time = 0.2337214848 milliseconds
+\item
+5 iteration(s), average time = 0.3156905944 milliseconds
+\item
+6 iteration(s), average time = 0.4754295848 milliseconds
+\item
+7 iteration(s), average time = 1.1059319282 milliseconds
+\item
+8 iteration(s), average time = 5.1622225588 milliseconds
+\item
+9 iteration(s), average time = 22.0955261797 milliseconds
+\item
+10 iteration(s), average time = 116.5331866548 milliseconds
+\item
+11 iteration(s), average time = 959.9939359772 milliseconds
+\end{itemize}
+\end{frame}
+
+\end{document}

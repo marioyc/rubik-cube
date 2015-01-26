@@ -17,7 +17,6 @@ public abstract class IDASolverInterface {
 		long startTime = System.nanoTime();
 		
 		while(i <= MAX_DEPTH){
-			//System.out.println("i = " + i);
 			if(search(0,i,C)){
 				ret.moves = i;
 				break;

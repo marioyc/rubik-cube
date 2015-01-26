@@ -2,7 +2,6 @@ public class Main{
 	static IDASolverReturn testIDA(IDASolverInterface solver, int moves)  throws Exception{
 		Cube C = new Cube();
 		C.mixCube(moves);
-		System.out.println(C);
 		
 		return solver.solve(C);
 	}
@@ -51,6 +50,27 @@ public class Main{
 			throw new Exception("Different answers : " + solver1.getAlgorithm() + " and " + solver2.getAlgorithm() + " for " + s);
 	}
 	
+	static void measureAverageTime(IDASolverInterface solver, int maxMoves, int numIt) throws Exception{
+		if(maxMoves < 1) return;
+		
+		double totalTime[] = new double[maxMoves + 1];
+		int count[] = new int[maxMoves + 1];
+		
+		for(int i = 1;i <= maxMoves;++i){
+			for(int j = 0;j < numIt;++j){
+				IDASolverReturn ret = testIDA(solver,i);
+				
+				totalTime[ret.moves] += ret.duration;
+				++count[ret.moves];
+			}
+		}
+		
+		System.out.println(solver.getAlgorithm());
+		
+		for(int i = 1;i <= maxMoves;++i)
+			System.out.println(i + " iteration(s), average time = " + totalTime[i] / count[i] + " milliseconds");
+	}
+	
     public static void main(String args[]) throws Exception{
     	// uncomment to generate pattern databases
     	
@@ -60,9 +80,10 @@ public class Main{
 			e.printStackTrace();
 		}*/
     	
-    	IDA1 solver1 = new IDA1();
-    	IDA2 solver2 = new IDA2();
-    	IDA3 solver3 = new IDA3();
+    	// uncomment the solvers you want to use
+    	//IDA1 solver1 = new IDA1();
+    	//IDA2 solver2 = new IDA2();
+    	//IDA3 solver3 = new IDA3();
     	
     	// uncomment and change to test a solver
     	/*for(int i = 0;i < 20;++i){
@@ -72,7 +93,7 @@ public class Main{
     	
     	// uncommment and change to compare two solvers
     	
-    	/*for(int moves = 1;moves <= 6;++moves)
+    	/*for(int moves = 1;moves <= 8;++moves)
 	    	for(int i = 0;i < 200;++i)
 		    	compareIDA(solver2,solver3,moves);
     	*/
@@ -80,33 +101,9 @@ public class Main{
     	// uncomment and change to test for a particular cube
     	//compareIDA(solver2,solver3,"YGBYGBYGBRRRRRRRRRGBWGBWGBWOOOOOOOOOGGGWWWYYYWWWYYYBBB");
     	
-    	// measure average time
-    	/*
-		double total[] = new double[10];
-		int cont[] = new int[10];
-		
-		for(int i = 0;i <= 8;++i) total[i] = 0;
-		
-		for(int i = 1;i <= 7;++i){
-	    	for(int it = 0;it < 30;++it){
-	    		long startTime = System.nanoTime();
-	    		
-	    		int ret = testIDA(solver1,i);
-	    		
-	    		System.out.println("it = " + it + " : " + ret);
-	    		
-	    		long endTime = System.nanoTime();
-	    		double duration = (endTime - startTime) / 1000000.0;
-	    		
-	    		System.out.println("duration = " + duration + " milliseconds");
-	
-	    		total[ret] += duration;
-	    		cont[ret] += 1;
-	    	}
-		}
-    	
-    	for(int i = 0;i <= 8;++i)
-    		System.out.println("\ni = " + i + ", average duration = " + total[i] / cont[i] + " milliseconds\n");
-    	*/
+    	// uncomment to measure average time
+    	//measureAverageTime(solver1,5,2000);
+    	//measureAverageTime(solver2,6,2000);
+    	// measureAverageTime(solver3,11,2000);
     }
 }
